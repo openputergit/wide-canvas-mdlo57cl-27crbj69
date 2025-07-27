@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIC Lakshya ACCA Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f9ff;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<div id="adminPanel" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+        <h2 class="text-2xl font-bold text-sky-700 mb-4">Admin Login</h2>
+        <form id="adminLoginForm" class="space-y-4">
+            <div>
+                <label for="adminId" class="block text-sm font-medium text-gray-700">Admin ID</label>
+                <input type="text" id="adminId" class="w-full px-4 py-2 rounded-md border border-gray-300">
+            </div>
+            <div>
+                <label for="adminPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="adminPassword" class="w-full px-4 py-2 rounded-md border border-gray-300">
+            </div>
+            <button type="submit" class="w-full bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700">Login</button>
+        </form>
+    </div>
+</div>
+
+<div id="adminDashboard" class="hidden fixed top-0 left-0 w-full h-full bg-white overflow-auto z-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-sky-700">Admin Dashboard</h2>
+            <button onclick="logoutAdmin()" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">Logout</button>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-4">Registered Students</h3>
+            <div id="studentData" class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2">Name</th>
+                            <th class="px-4 py-2">Email</th>
+                            <th class="px-4 py-2">Phone</th>
+                            <th class="px-4 py-2">WhatsApp</th>
+                            <th class="px-4 py-2">Paper</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="adminLoginBtn" class="fixed top-4 right-4 bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700">
+    Admin Login
+</button>
+
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto form-container rounded-lg shadow-xl p-6 md:p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-sky-700 mb-2">IIC Lakshya</h1>
+                <h2 class="text-xl text-sky-600">ACCA Initial Paper Selecetion Form</h2>
+            </div>
+
+            <form id="registrationForm" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" id="name" name="name" required
+                        class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                </div>
+
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required
+                        class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                </div>
+
+                <div>
+                    <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-1">WhatsApp Number</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" pattern="[0-9]{10}" required
+                        class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                </div>
+
+                <div>
+                    <label for="paper" class="block text-sm font-medium text-gray-700 mb-1">Select ACCA Paper</label>
+                    <select id="paper" name="paper" required
+                        class="w-full px-4 py-2 rounded-md border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                        <option value="">Choose a paper</option>
+                        <option value="BT">Business and Technology (BT)</option>
+                        <option value="FA">Financial Accounting (FA)</option>
+                        <option value="MA">Management Accounting (MA)</option>
+                    </select>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 transition duration-300 font-medium">
+                    Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Encryption key (in production, this should be securely stored)
+        const ENCRYPTION_KEY = 'IICLakshyaSecureKey2023';
+
+        // Admin credentials
+        const ADMIN_CREDENTIALS = {
+            id: 'OMG1818',
+            password: 'GODHELPME'
+        };
+
+        // Encryption functions
+        function encryptData(data) {
+            return CryptoJS.AES.encrypt(JSON.stringify(data), ENCRYPTION_KEY).toString();
+        }
+
+        function decryptData(encryptedData) {
+            const bytes = CryptoJS.AES.decrypt(encryptedData, ENCRYPTION_KEY);
+            return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        }
+
+        // Admin panel controls
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            document.getElementById('adminPanel').classList.remove('hidden');
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const adminId = document.getElementById('adminId').value;
+            const adminPassword = document.getElementById('adminPassword').value;
+
+            if (adminId === ADMIN_CREDENTIALS.id && adminPassword === ADMIN_CREDENTIALS.password) {
+                document.getElementById('adminPanel').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadStudentData();
+            } else {
+                alert('Invalid credentials!');
+            }
+        });
+
+        function logoutAdmin() {
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('adminId').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function loadStudentData() {
+            const encryptedData = localStorage.getItem('studentData');
+            if (encryptedData) {
+                try {
+                const data = decryptData(encryptedData);
+                displayStudentData(data);
+                } catch (error) {
+                    console.error('Error loading student data:', error);
+                    alert('Error loading student data. Please try again.');
+                }
+            }
+        }
+        
+        function displayStudentData(data) {
+                const tbody = document.getElementById('studentTableBody');
+                tbody.innerHTML = '';
+                data.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="border px-4 py-2">${student.name}</td>
+                        <td class="border px-4 py-2">${student.email}</td>
+                        <td class="border px-4 py-2">${student.phone}</td>
+                        <td class="border px-4 py-2">${student.whatsapp}</td>
+                        <td class="border px-4 py-2">${student.paper}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function saveStudentData(studentData) {
+            let existingData = [];
+            const storedData = localStorage.getItem('studentData');
+            if (storedData) {
+                existingData = decryptData(storedData);
+            }
+            existingData.push(studentData);
+            const encryptedData = encryptData(existingData);
+            localStorage.setItem('studentData', encryptedData);
+            if (document.getElementById('adminDashboard').classList.contains('hidden') === false) loadStudentData();
+        }
+
+        const whatsappLinks = {
+            'BT': 'https://chat.whatsapp.com/H75VA0ITFKgGoTW3bAH7l6?mode=r_t',
+            'FA': 'https://chat.whatsapp.com/C1YDZsQXG3UHZzYrNZuCi3?mode=r_t',
+            'MA': 'https://chat.whatsapp.com/CWF8mKQtajnGTFZNJXowqG?mode=r_t'
+        };
+
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const studentData = {
+                name: this.name.value,
+                email: this.email.value,
+                phone: this.phone.value,
+                whatsapp: this.whatsapp.value,
+                paper: this.paper.value
+            };
+            
+            // Save encrypted student data
+            saveStudentData(studentData);
+            
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg';
+            successMessage.textContent = 'Registration successful!';
+            document.body.appendChild(successMessage);
+            
+            // Clear form
+            this.reset();
+            
+            // Remove success message after 3 seconds
+            setTimeout(() => successMessage.remove(), 3000);
+            
+            if (studentData.paper && studentData.whatsapp) {
+                const whatsappLink = whatsappLinks[studentData.paper];
+                if (whatsappLink) {
+                    alert('Registration successful! Redirecting to WhatsApp group...');
+                    window.open(whatsappLink, '_blank');
+                }
+            }
+        });
+
+        // Phone number validation
+        const phoneInputs = document.querySelectorAll('input[type="tel"]');
+        phoneInputs.forEach(input => {
+            input.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+            });
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
